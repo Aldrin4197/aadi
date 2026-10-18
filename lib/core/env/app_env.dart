@@ -4,6 +4,8 @@
 /// only requires flipping [useMockData] and setting [apiBaseUrl].
 library;
 
+import 'package:flutter/foundation.dart';
+
 import '../../domain/enums.dart';
 import '../../domain/models/app_user.dart';
 
@@ -15,6 +17,7 @@ class AppEnv {
     required this.apiBaseUrl,
     required this.useMockData,
     this.bypassProviderVerification = false,
+    this.bypassAuthentication = false,
   });
 
   final AppFlavor flavor;
@@ -26,11 +29,16 @@ class AppEnv {
   /// waiting on an admin approval.
   final bool bypassProviderVerification;
 
+  /// Only enables a local screen-inspection identity in non-release builds.
+  final bool bypassAuthentication;
+  bool get allowGuestInspection => !kReleaseMode && bypassAuthentication;
+
   static const AppEnv dev = AppEnv(
     flavor: AppFlavor.dev,
     apiBaseUrl: 'https://api.dev.aadi.app',
     useMockData: true,
     bypassProviderVerification: true,
+    bypassAuthentication: true,
   );
 
   static const AppEnv staging = AppEnv(
